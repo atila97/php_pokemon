@@ -9,6 +9,8 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/migrations
+
 .env
 /composer.phar
 /composer.lock
