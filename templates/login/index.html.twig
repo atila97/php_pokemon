@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pokemon : Connexion{% endblock %}
+
+{% block body %}
+
+<div id="loginContent">
+
+    <h2>Bienvenue <small>Pokemon</small></h2>
+    <span>Formulaire de connexion</span>
+    <form action="{{ path('app_login') }}" method="post" class="login-form">
+        <label for="username">E-mail:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="_password"/>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        {% if error %}
+            <div class="login-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <button type="submit">Connexion</button>
+    </form>
+
+    <span class="register-span">
+        Vous n'avez pas de compte?
+        <a href="{{path('app_register')}}" >Créer compte</a>
+    </span>
+</div>
+{% endblock %}
