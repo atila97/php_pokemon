@@ -68,10 +68,8 @@ class PokemonFormType extends AbstractType
 
         });
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-            $form = $event->getForm();
-            /** @var Pokemon */
-            $pokemon = $event->getData();
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($extraChoice){
+            $this->entityManager->remove($extraChoice);
         });
     }   
 
