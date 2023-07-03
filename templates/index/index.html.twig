@@ -64,7 +64,7 @@ body %}
               {{ pokemon.generation }}
             </div>
             <div class="col-item">
-              {{ pokemon.legendary }}
+              {{ pokemon.legendary ? 'Oui' : 'Non' }}
             </div>
           </div>
         {% endfor %}

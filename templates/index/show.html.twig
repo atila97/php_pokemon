@@ -40,8 +40,6 @@
             {% endfor %}
         {% endfor %}
 
-
-
         <div class="pokemon-stats">
             <span class="stat-title">Statistique de base</span>
             {{ _self.renderStatRow('HP', pokemon.hp) }}
@@ -56,13 +54,39 @@
             </div>
         </div>
 
+        <div class="buttons-action">
+            <a href="{{ path('pokemon_edit', { id: pokemon.id }) }}" class="btn-modify">
+                Modifier
+            </a>
 
-        <a href="{{ path('pokemon_edit', { id: pokemon.id }) }}" class="btn-modify">
-            Modifier
-        </a>
+            <form method="post" action="{{ path('pokemon_delete', {'id': pokemon.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pokemon.id) }}">
+                <button class="btn-delete">Supprimer</button>
+            </form>
+        </div>
 
          <a href="{{path('app_index')}}"> Retourner à la liste </a>
     </div>
 
 </div>
+
+
+<script>
+
+    function handleDelete(url) {
+        let res = confirm('Are you sure you want to delete this resource?');
+
+        if (res){
+            fetch(url, {method: "DELETE"}).then(res => res)
+            .then(_ => {
+
+            })
+
+        }
+    }
+
+
+</script>
+
 {% endblock %}

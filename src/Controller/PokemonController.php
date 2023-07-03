@@ -87,6 +87,28 @@ class PokemonController extends AbstractController
         ]);
     }
 
+    #[Route('/pokemon/{id}/delete', name: 'pokemon_delete', methods: ['DELETE', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function delete(Request $request, ?Pokemon $pokemon, EntityManagerInterface $entityManager): Response
+    {
+        if (null === $pokemon) {
+            return $this->render('index/404.html.twig', []);
+        }
+
+        if ($pokemon->getLegendary()) {
+            $this->addFlash('error', "Un pokemon légéndaire ne peut pas être supprimé.");
+            return $this->redirectToRoute('pokemon_show', ["id" => $pokemon->getId()]);
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$pokemon->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($pokemon);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_index');
+        }
+        $this->addFlash('success', "Un pokemon a été supprimé");
+        return $this->redirectToRoute('pokemon_show', ["id" => $pokemon->getId()]);
+    }
+
     #[Route('/index-with-paginator-bundle', name: 'app_index_paginator_bundle')]
     public function indexPaginator(): Response
     {
