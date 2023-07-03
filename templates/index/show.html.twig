@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pokemon!{% endblock %}
+
+{% macro renderStatRow(name, value) %}
+    <div class="stat-row">
+        <span class="stat-name">{{ name }}</span>
+        <span class="stat-value">{{ value }}</span>
+        <span class="stat-progress">
+            <div
+                style="width:{{ value * 2.5 }}px;" 
+                class="progress {{  value<= 50 ? 'danger' :  value <= 80 ? 'warning' : 'success'   }} ">
+            </div>
+        </span>
+    </div>
+{% endmacro %}
+
+{% block body %}
+<div class="example-wrapper">
+    <div class="pokemon-info">
+        <span class="pokemon-name">
+            {{pokemon.number}} - {{pokemon.name}}
+        </span>
+
+        <div class="pokemon-type-list">
+            {% for pokemonType in pokemon.type %}
+                <span class="pokemon-type">{{ pokemonType.name }}</span>
+            {% endfor %}
+            <span class="pokemon-generation">Génération {{ pokemon.generation}}</span>
+            {% if pokemon.legendary %}
+                <span class="pokemon-leng">Pokémon légendaire</span>
+            {% endif %}
+        </div>
+        <div class="pokemon-stats">
+            <span class="stat-title">Statistique de base</span>
+            {{ _self.renderStatRow('HP', pokemon.hp) }}
+            {{ _self.renderStatRow('Attaque', pokemon.attack) }}
+            {{ _self.renderStatRow('Défense', pokemon.defense) }}
+            {{ _self.renderStatRow('Atq Spé', pokemon.spAtk) }}
+            {{ _self.renderStatRow('Déf Spé', pokemon.spDef) }}
+            {{ _self.renderStatRow('Vitesse', pokemon.speed) }}
+            <div class="stat-row no-border">
+                <span class="stat-name">Total</span>
+                <span class="stat-value">{{pokemon.total}}</span>
+            </div>
+        </div>
+
+
+        {% if app.user %}
+            <a href="{{ path('pokemon_edit', { id: pokemon.id }) }}" class="btn-modify">
+                Modifier
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

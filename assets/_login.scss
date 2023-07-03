@@ -1,0 +1,66 @@
+#registerContent,
+#loginContent {
+  display: flex;
+  flex-direction: column;
+  height: 85vh;
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+
+  .login-error {
+    font-weight: 600;
+    color: red;
+    padding: 0.625rem 1.5rem;
+    background-color: #f3000826;
+    min-width: 300px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+  }
+
+  .login-form {
+    max-width: 500px;
+    min-width: 400px;
+    margin-top: 2rem;
+    input {
+      box-sizing: border-box;
+      font-size: 1.1em;
+      display: block;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: 700;
+      color: #375233;
+    }
+
+    button[type=submit] {
+      padding: 0.725rem 1.2rem; 
+      background:#ccc; 
+      border:0 none;
+      cursor:pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px; 
+      font-size: 1.1em;
+      width: 100%;
+      color: white;
+      background-color: #375233;
+    }
+  }
+
+  .register-span {
+    margin-top: 2rem;
+    color: #375233;
+    a {
+      color: #375233;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  }
+}

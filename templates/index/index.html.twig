@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %} {% block title %}Pokemon!{% endblock %} {% block
+body %}
+<div class="page-wrapper">
+  <div class="pokemons-table-list">
+    <div class="table-filter">
+      {{ form(form) }}
+    </div>
+    <div class="table-content">
+      <div class="table-header">
+        <span class="col-item">ID</span>
+        <span class="col-item col-name">Name</span>
+        <span class="col-item">Total</span>
+        <span class="col-item col-type">Types</span>
+        <span class="col-item">HP</span>
+        <span class="col-item">Generation</span>
+        <span class="col-item">Legendary</span>
+        <span class="col-item col-action">Actions</span>
+      </div>
+
+      <div class="table-body">
+        {% for pokemon in paginatedData %}
+          <div class="table-row">
+            <div class="col-item">
+              <a href="{{ path('pokemon_show', { id: pokemon.id }) }}">
+                {{ pokemon.id }}
+              </a>
+            </div>
+            <div class="col-item col-name">
+              {{ pokemon.name }}
+            </div>
+            <div class="col-item">
+              {{ pokemon.total }}
+            </div>
+            <div class="col-item col-type">
+              {% for pokemonType in pokemon.type %}
+                <span class="pokemon-type">{{ pokemonType.name }}</span>
+              {% endfor %}
+
+            </div>
+            <div class="col-item">
+              {{ pokemon.hp }}
+            </div>
+            <div class="col-item">
+              {{ pokemon.generation }}
+            </div>
+            <div class="col-item">
+              {{ pokemon.legendary }}
+            </div>
+            <div class="col-item col-action"></div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    
+
+    
+    <div class="table-pagination">
+      {% for page in 1..totalPages %}
+        {% set support_url = path('app_index', {}) %}
+        <a class="pagination-item" href="{{support_url}}?{{app.request.getQueryString()}}&page={{page}}">
+          {{ page }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

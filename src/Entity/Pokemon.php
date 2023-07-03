@@ -2,22 +2,28 @@
 
 namespace App\Entity;
 
+
 use App\Repository\PokemonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use JsonSerializable;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=PokemonRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
-class Pokemon
+class Pokemon implements JsonSerializable
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
-    private $id;
+    protected ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -27,7 +33,7 @@ class Pokemon
     /**
      * @ORM\Column(type="integer")
      */
-    private $total;
+    private $number;
 
     /**
      * @ORM\Column(type="integer")
@@ -66,6 +72,7 @@ class Pokemon
 
     /**
      * @ORM\ManyToMany(targetEntity=PokemonType::class, inversedBy="pokemon")
+     * @MaxDepth(1)
      */
     private $type;
 
@@ -83,7 +90,7 @@ class Pokemon
     public static function fromCsv(array $row) : self {
         return (new Self())
             ->setName($row["Name"])
-            ->setTotal($row["Total"])
+            ->setNumber($row["#"])
             ->setHp($row["HP"])
             ->setAttack($row["Attack"])
             ->setDefense($row["Defense"])
@@ -91,7 +98,7 @@ class Pokemon
             ->setSpDef($row["Sp. Def"])
             ->setSpeed($row["Speed"])
             ->setGeneration($row["Generation"])
-            ->setLegendary($row["Legendary"])
+            ->setLegendary($row["Legendary"] === "True")
         ;
     }
 
@@ -114,12 +121,17 @@ class Pokemon
 
     public function getTotal(): ?int
     {
-        return $this->total;
+        return $this->hp + $this->attack + $this->defense + $this->speed + $this->spAtk + $this->spDef;
     }
 
-    public function setTotal(int $total): self
+    public function getNumber(): ?int
     {
-        $this->total = $total;
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
 
         return $this;
     }
@@ -242,5 +254,12 @@ class Pokemon
         $this->generation = $generation;
 
         return $this;
+    }
+
+    public function jsonSerialize() 
+    {
+        return [
+            "id" => $this->id
+        ];
     }
 }

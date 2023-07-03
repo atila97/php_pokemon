@@ -47,6 +47,46 @@ class PokemonRepository extends ServiceEntityRepository
         }
     }
 
+    public function countPokemons($formData) : int {
+        return $this->getPokeQuery($formData)
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    private function getPokeQuery($formData){
+        $qb = $this->createQueryBuilder("p");
+        if ($formData !== null) {
+            if ($formData["name"] !== null) {
+                $qb->andWhere('p.name = :name')
+                    ->setParameter('name', $formData["name"] );
+            }
+
+            if ($formData["legendary"] !== null) {
+                $qb->andWhere('p.legendary = :legendary')
+                    ->setParameter('legendary', $formData["legendary"] );
+            }
+
+            if ($formData["type"] !== null) {
+                $qb->join('p.type', 't')
+                    ->andWhere($qb->expr()->in('t.id', ':type'))
+                    ->setParameter('type', $formData["type"] );
+            }
+        }
+        return $qb;
+
+    }
+
+
+    public function paginate(int $page, int $pageSize, $formData) {
+        $qb = $this->getPokeQuery($formData);
+        $offset = ($page - 1) * $pageSize;
+        $qb->setFirstResult($offset)
+            ->setMaxResults($pageSize);
+        return $qb->getQuery()->getResult();
+    }
+
+
     // /**
     //  * @return Pokemon[] Returns an array of Pokemon objects
     //  */
