@@ -228,8 +228,20 @@ class Pokemon implements JsonSerializable
         return $this->type;
     }
 
+    public function setTypes($type1, $type2): self
+    {
+        $this->type = new ArrayCollection();
+        $this->addType($type1);
+        $this->addType($type2);
+        return $this;
+    }
+
     public function addType(PokemonType $type): self
     {
+        if ($type->getId() === null) {
+            return $this;
+        }
+
         if (!$this->type->contains($type)) {
             $this->type[] = $type;
         }

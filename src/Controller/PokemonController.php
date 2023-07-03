@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Pokemon;
 use App\Form\PokemonFilterType;
+use App\Form\PokemonFormType;
+use App\Form\PokemonType;
 use App\Repository\PokemonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,15 +28,13 @@ class PokemonController extends AbstractController
     #[Route('/', name: 'app_index')]
     public function index(Request $request): Response
     {
+        
 
         $page = $request->query->getInt('page', 1);
         $pageSize = $request->query->getInt('size', 50);
         $form = $this->createForm(PokemonFilterType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         $totalItems = $this->pokemonRepository->countPokemons($form->getData());
-        if ($form->isSubmitted()) {
-         //   $page = 1;
-        }
 
         $paginatedData = $this->pokemonRepository->paginate($page, $pageSize, $form->getData());
         return $this->render('index/index.html.twig', [
@@ -49,6 +49,10 @@ class PokemonController extends AbstractController
     #[Route('/pokemon/{id}', name: 'pokemon_show')]
     public function show(?Pokemon $pokemon): Response
     {
+        if (null === $pokemon) {
+            return $this->render('index/404.html.twig', []);
+        }
+
         return $this->render('index/show.html.twig', [
             'pokemon' => $pokemon
         ]);
@@ -56,10 +60,30 @@ class PokemonController extends AbstractController
 
     #[Route('/pokemon/{id}/edit', name: 'pokemon_edit')]
     #[IsGranted('ROLE_USER')]
-    public function edit(?Pokemon $pokemon): Response
+    public function edit(Request $request, ?Pokemon $pokemon, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('index/show.html.twig', [
-            'pokemon' => $pokemon
+        if (null === $pokemon) {
+            return $this->render('index/404.html.twig', []);
+        }
+
+        if ($pokemon->getLegendary()) {
+            $this->addFlash('error', "Un pokemon légéndaire ne peut pas être modifié.");
+            return $this->redirectToRoute('pokemon_show', ["id" => $pokemon->getId()]);
+        }
+
+        $form = $this->createForm(PokemonFormType::class, $pokemon, ['method' => 'GET']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($pokemon);
+            $entityManager->flush();
+            $this->addFlash('success', "Ce pokemon a été modifié");
+            return $this->redirectToRoute('pokemon_show', ["id" => $pokemon->getId()]);
+        }
+
+        return $this->render('index/edit.html.twig', [
+            'pokemon' => $pokemon,
+            'form' => $form->createView()
         ]);
     }
 

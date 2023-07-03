@@ -3,8 +3,29 @@ body %}
 <div class="page-wrapper">
   <div class="pokemons-table-list">
     <div class="table-filter">
-      {{ form(form) }}
+
+    {{ form_start(form, {'attr': {'class': 'table-filter-row'}} ) }}
+      <div class="search-input">
+        {{ form_row(form.name, {'attr': {'class': 'search-input'}}) }}
+      </div>
+      <div class="select-filter">
+        {{ form_row(form.legendary) }}
+      </div>
+      <div class="select-filter">
+        {{ form_row(form.type) }}
+      </div>
+
+      <div class="select-filter">
+        {{ form_row(form.generation) }}
+      </div>
+
+       <div class="btn-apply">
+        {{ form_row(form.Rechercher) }}
+      </div>
+    {{ form_end(form) }}
     </div>
+
+
     <div class="table-content">
       <div class="table-header">
         <span class="col-item">ID</span>
@@ -14,7 +35,6 @@ body %}
         <span class="col-item">HP</span>
         <span class="col-item">Generation</span>
         <span class="col-item">Legendary</span>
-        <span class="col-item col-action">Actions</span>
       </div>
 
       <div class="table-body">
@@ -46,23 +66,23 @@ body %}
             <div class="col-item">
               {{ pokemon.legendary }}
             </div>
-            <div class="col-item col-action"></div>
           </div>
         {% endfor %}
       </div>
     </div>
 
-    
+    {% if totalPages >= 2 %}
+      <div class="table-pagination">
+        {% for page in 1..totalPages %}
+          {% set support_url = path('app_index', {}) %}
+          <a class="pagination-item {{ app.request.query.get('page', 1) == page ? 'selected' : ''}}" 
+            href="{{support_url}}?{{app.request.getQueryString()}}&page={{page}}">
+            {{ page }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-    
-    <div class="table-pagination">
-      {% for page in 1..totalPages %}
-        {% set support_url = path('app_index', {}) %}
-        <a class="pagination-item" href="{{support_url}}?{{app.request.getQueryString()}}&page={{page}}">
-          {{ page }}
-        </a>
-      {% endfor %}
-    </div>
   </div>
 </div>
 {% endblock %}

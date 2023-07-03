@@ -58,8 +58,8 @@ class PokemonRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder("p");
         if ($formData !== null) {
             if ($formData["name"] !== null) {
-                $qb->andWhere('p.name = :name')
-                    ->setParameter('name', $formData["name"] );
+                $qb->andWhere('p.name LIKE :name')
+                    ->setParameter('name', '%' . $formData['name'] . '%' );
             }
 
             if ($formData["legendary"] !== null) {
@@ -67,10 +67,15 @@ class PokemonRepository extends ServiceEntityRepository
                     ->setParameter('legendary', $formData["legendary"] );
             }
 
-            if ($formData["type"] !== null) {
+            if ($formData["type"] !== null && $formData["type"]->getId() !== null) {
                 $qb->join('p.type', 't')
                     ->andWhere($qb->expr()->in('t.id', ':type'))
                     ->setParameter('type', $formData["type"] );
+            }
+
+            if ($formData["generation"] !== null) {
+                $qb->andWhere('p.generation = :generation')
+                    ->setParameter('generation', $formData["generation"] );
             }
         }
         return $qb;

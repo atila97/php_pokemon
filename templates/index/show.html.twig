@@ -31,6 +31,17 @@
                 <span class="pokemon-leng">Pokémon légendaire</span>
             {% endif %}
         </div>
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+
+
         <div class="pokemon-stats">
             <span class="stat-title">Statistique de base</span>
             {{ _self.renderStatRow('HP', pokemon.hp) }}
@@ -46,11 +57,11 @@
         </div>
 
 
-        {% if app.user %}
-            <a href="{{ path('pokemon_edit', { id: pokemon.id }) }}" class="btn-modify">
-                Modifier
-            </a>
-        {% endif %}
+        <a href="{{ path('pokemon_edit', { id: pokemon.id }) }}" class="btn-modify">
+            Modifier
+        </a>
+
+         <a href="{{path('app_index')}}"> Retourner à la liste </a>
     </div>
 
 </div>
