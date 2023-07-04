@@ -71,18 +71,39 @@ body %}
       </div>
     </div>
 
-    {% if totalPages >= 2 %}
-      <div class="table-pagination">
-        {% for page in 1..totalPages %}
-          {% set support_url = path('app_index', {}) %}
-          <a class="pagination-item {{ app.request.query.get('page', 1) == page ? 'selected' : ''}}" 
-            href="{{support_url}}?{{app.request.getQueryString()}}&page={{page}}">
-            {{ page }}
-          </a>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <div class="table-pagination">
+      {% if totalPages >= 2 %}
+      {% set support_url = path('app_index', {}) %}
+        <select id="pageSize" style="margin-right: 1rem;" onchange="getUrl('{{support_url}}')">
+          <option value="25">25</option>
+          <option value="50" selected>50</option>
+          <option value="75">75</option>
+          <option value="100">100</option>
+        </select>
 
+          {% for page in 1..totalPages %}
+            <a class="pagination-item {{ app.request.query.get('page', 1) == page ? 'selected' : ''}}" 
+              href="#" onclick="getUrl('{{support_url}}', {{page}})">
+              {{ page }}
+            </a>
+          {% endfor %}
+      {% endif %}
+    </div>
   </div>
 </div>
+
+<script>
+
+  function getUrl(path, page = null) {
+    const pageSize = document.getElementById('pageSize');
+    const currentPage = document.querySelector('a.selected');
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("page", page ? page : currentPage.innerText)
+    urlParams.set('pageSize', pageSize.value)
+    return window.location.href =  `${path}?${urlParams.toString()}`;
+  }
+
+
+</script>
+
 {% endblock %}

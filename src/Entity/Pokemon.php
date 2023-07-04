@@ -10,9 +10,40 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use JsonSerializable;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     paginationClientItemsPerPage=true,
+ *     normalizationContext={"groups"={"pokemon:read"}},
+ *     denormalizationContext={"groups"={"pokemon:write"}},
+ *     collectionOperations={
+ *          "get"={
+ *              "pagination_items_per_page"=50
+ *          }
+ *      },
+ *     itemOperations={
+ *      "get",
+ *      "put"={
+ *          "method"="PUT",
+ *          "controller"=ApiController::class,
+ *      },
+ *      "delete"={
+ *          "method"="DELETE",
+ *          "controller"=ApiController::class,
+ *      }
+ *     },
+ * )
+ * @ApiFilter(BooleanFilter::class, properties={"legendary"})
+ * @ApiFilter(SearchFilter::class, properties={"type": "exact", "name": "partial", "generation"})
+ * 
  * @ORM\Entity(repositoryClass=PokemonRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
@@ -22,62 +53,74 @@ class Pokemon implements JsonSerializable
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(name="id", type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     protected ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $number;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $hp;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $attack;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $defense;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $spAtk;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $spDef;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $speed;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $legendary;
 
     /**
      * @ORM\ManyToMany(targetEntity=PokemonType::class, inversedBy="pokemon")
      * @MaxDepth(1)
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="integer")
+     *  @Groups({"pokemon:read", "pokemon:write"})
      */
     private $generation;
 
@@ -112,8 +155,9 @@ class Pokemon implements JsonSerializable
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
+        if (null === $name || empty($name)) return $this;
         $this->name = $name;
 
         return $this;
@@ -213,8 +257,9 @@ class Pokemon implements JsonSerializable
         return $this->legendary;
     }
 
-    public function setLegendary(bool $legendary): self
+    public function setLegendary(?bool $legendary): self
     {
+        if (null === $legendary) return $this;
         $this->legendary = $legendary;
 
         return $this;
@@ -236,8 +281,9 @@ class Pokemon implements JsonSerializable
         return $this;
     }
 
-    public function addType(PokemonType $type): self
+    public function addType(?PokemonType $type): self
     {
+        if ($type === null) return $this;
         if ($type->getId() === null) {
             return $this;
         }
@@ -261,8 +307,9 @@ class Pokemon implements JsonSerializable
         return $this->generation;
     }
 
-    public function setGeneration(int $generation): self
+    public function setGeneration(?int $generation): self
     {
+        if (null === $generation) return $this;
         $this->generation = $generation;
 
         return $this;

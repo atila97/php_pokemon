@@ -25,20 +25,28 @@ class PokemonController extends AbstractController
     }
 
 
+    #[Route('/app', name: 'app_index_vue')]
+    #[Route('/app/login', name: 'app_index_vue_login')]
+    #[Route('/app/register', name: 'app_index_vue_register')]
+    #[Route('/app/pokemon/{id}', name: 'app_index_vue_details')]
+    #[Route('/app/pokemon/{id}/edit', name: 'app_index_vue_details_edit')]
+    public function indexVue(Request $request): Response
+    {
+        return $this->render('index/vue_app.html.twig', [
+        ]);
+    }
+
+
     #[Route('/', name: 'app_index')]
     public function index(Request $request): Response
     {
-        
-
         $page = $request->query->getInt('page', 1);
-        $pageSize = $request->query->getInt('size', 50);
+        $pageSize = $request->query->getInt('pageSize', 50);
         $form = $this->createForm(PokemonFilterType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         $totalItems = $this->pokemonRepository->countPokemons($form->getData());
-
         $paginatedData = $this->pokemonRepository->paginate($page, $pageSize, $form->getData());
         return $this->render('index/index.html.twig', [
-            'controller_name' => 'IndexController',
             'paginatedData' => $paginatedData,
             'currentPage' => $page,
             'totalPages' => ceil($totalItems / $pageSize),

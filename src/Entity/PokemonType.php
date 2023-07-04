@@ -7,10 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=PokemonTypeRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"pokemon:read"}},
+ *     denormalizationContext={"groups"={"pokemon:write"}},
+ *     itemOperations={"get"},
+ * )
+ * 
  */
 class PokemonType
 {
@@ -18,11 +24,13 @@ class PokemonType
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"pokemon:read", "pokemon:write"})
      */
     private $name;
 
