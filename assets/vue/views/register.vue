@@ -40,13 +40,13 @@ const errors = ref([]);
 
 function handleRegister() {
   errors.value = [];
-  // if (!validateEmail(register.value.email)) {
-  //   errors.value.push("L'e-mail n'est pas valide.")
-  // }
+  if (!validateEmail(register.value.email)) {
+    errors.value.push("L'e-mail n'est pas valide.")
+  }
 
-  // if (!validatePassword(register.value.password)) {
-  //   errors.value.push(" Le mot de passe doit comporter au minimum 8 caractères, une majuscule, une minuscule et un caractère spécial ,;:?./@#'{[]}()$*%=+ ")
-  // }
+  if (!validatePassword(register.value.password)) {
+    errors.value.push(" Le mot de passe doit comporter au minimum 8 caractères, une majuscule, une minuscule et un caractère spécial ,;:?./@#'{[]}()$*%=+ ")
+  }
 
   if (errors.value.length === 0) {
 
