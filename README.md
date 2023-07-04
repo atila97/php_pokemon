@@ -62,3 +62,7 @@ Il s'agit de l'application Web classique qui utilise la session symfony.
 C'est une application web créée rapidement avec VueJS. Cette application utilise les API déjà créées et gère l'authentification à l'aide d'un Token.
 
 `` http://localhost:8000/app``
+
+
+## Test unitaires
+En cours
