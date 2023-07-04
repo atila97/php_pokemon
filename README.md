@@ -65,4 +65,16 @@ C'est une application web créée rapidement avec VueJS. Cette application utili
 
 
 ## Test unitaires
-En cours
+
+```
+# Installer les dépendences
+$ componser install
+
+# Créer la base de données
+
+$ php bin/console doctrine:database:create --env=test
+$ php bin/console doctrine:migrations:migrate --env=test
+
+# Lancer le test
+$ php bin/phpunit
+```
