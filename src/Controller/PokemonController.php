@@ -5,12 +5,9 @@ namespace App\Controller;
 use App\Entity\Pokemon;
 use App\Form\PokemonFilterType;
 use App\Form\PokemonFormType;
-use App\Form\PokemonType;
 use App\Repository\PokemonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,18 +19,6 @@ class PokemonController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager, 
         private PokemonRepository $pokemonRepository)
     {
-    }
-
-
-    #[Route('/app', name: 'app_index_vue')]
-    #[Route('/app/login', name: 'app_index_vue_login')]
-    #[Route('/app/register', name: 'app_index_vue_register')]
-    #[Route('/app/pokemon/{id}', name: 'app_index_vue_details')]
-    #[Route('/app/pokemon/{id}/edit', name: 'app_index_vue_details_edit')]
-    public function indexVue(Request $request): Response
-    {
-        return $this->render('index/vue_app.html.twig', [
-        ]);
     }
 
 
@@ -117,11 +102,16 @@ class PokemonController extends AbstractController
         return $this->redirectToRoute('pokemon_show', ["id" => $pokemon->getId()]);
     }
 
-    #[Route('/index-with-paginator-bundle', name: 'app_index_paginator_bundle')]
-    public function indexPaginator(): Response
+
+
+    #[Route('/app', name: 'app_index_vue')]
+    #[Route('/app/login', name: 'app_index_vue_login')]
+    #[Route('/app/register', name: 'app_index_vue_register')]
+    #[Route('/app/pokemon/{id}', name: 'app_index_vue_details')]
+    #[Route('/app/pokemon/{id}/edit', name: 'app_index_vue_details_edit')]
+    public function indexVue(Request $request): Response
     {
-        return $this->render('index/index.html.twig', [
-            'controller_name' => 'IndexController',
+        return $this->render('index/vue_app.html.twig', [
         ]);
     }
 }

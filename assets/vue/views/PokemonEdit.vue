@@ -78,7 +78,6 @@ fetch(`/api/pokemon/${route.params.id}`)
     pokemon.value = res;
     pokemon.value['type1'] = res['type'][0]
     pokemon.value['type2'] = res['type'][1] 
-    console.log(pokemon.value)
   });
 
 const udpateAction = () => {

@@ -60,13 +60,7 @@ function handleRegister() {
           return;
         }
         router.push({name: 'login'})
-        console.log(data);
       })
-
-
-
-
-
   }
 }
 
