@@ -47,7 +47,7 @@ class ApiLoginController extends AbstractController
 
         if (null !== $entityManager->getRepository(User::class)->findOneBy(["email" => $data["email"]])) {
             return $this->json([ "errors" => ["Il existe déjà un compte avec cet email"]
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         $user = new User();
