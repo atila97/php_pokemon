@@ -3,10 +3,12 @@
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class UserTest extends ApiTestCase
 {
 
+    use ResetDatabase;
     public function testCreateUser(): void
     {
         $params = [
@@ -44,7 +46,7 @@ class UserTest extends ApiTestCase
         ];
 
         $response = $client->request('POST', '/api/login', [ 'body' => json_encode($params),]);
-        $data = json_decode($response->getContent());
+        $data = json_decode($response->getContent());;
         $this->assertResponseStatusCodeSame(200);
         $this->assertArrayHasKey('token', $data);
     }
