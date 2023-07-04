@@ -6,61 +6,59 @@ Le but du test est de pouvoir importer un fichier CSV d'une liste de Pokémon (f
 
 Une authentification sera nécessaire afin de pouvoir utiliser l'API sur certaines routes.
 
-Voici les spécifications demandées:
-## Import du fichier
-- Vous devrez créer une commande permettant d'importer le fichier CSV afin de remplir votre base de donnée.
-- Seul les fichiers CSV seront acceptés
-- Le fichier est présenté sous cette forme
 
-| #   | Name | Type 1 | Type 2 | Total |  HP | Attack | Defense | Sp. Atk | Sp. Def | Speed | Generation | Legendary |
-| ---:|-----:| ------:| ------:| -----:| ---:| ------:| -------:| -------:| -------:| -----:| ----------:| ---------:|
+## Information 
+```
+ Symfony                                               
+ -------------------- --------------------------------- 
+  Version              5.4.25                                     
+ -------------------- --------------------------------- 
+  PHP                                                   
+ -------------------- --------------------------------- 
+  Version              8.0.29                           
+  Architecture         64 bits                                       
+ -------------------- --------------------------------- 
+  Composer                                                   
+ -------------------- --------------------------------- 
+  Version              2.5.8                           
+```
+
+## Installation
+Installez les dépendances symfony.
+
+```
+$ git clone https://github.com/atila97/php_pokemon.git
+$ cd php_pokemon
+$ git checkout dev
+$ composer install
+
+#Lancer le serveur symfony
+$ symfony server:start
+
+# Mettre à jour la basse de données
+$ php bin/console doctrine:schema:update --force
+```
+
+Installez Node (`V 14+`)
+
+```
+$ npm install
+$ npm run build
+```
+
+## Import du fichier
+Importez les données à partir d'un fichier valide.
 
 ``$ bin/console app:import:csv FILEPATH``
 
-> À noter que l'ordre des colonnes ne doit pas impacter l'import
-## Actions sur l'API:
-### Inscription:
+## Interfaces
+### Symfony Web Application (Session)
+Il s'agit de l'application Web classique qui utilise la session symfony.
 
-- Email et mot de passe obligatoire
-- Le champs email doit être un email valide et unique
-- Le champs mot de passe doit comporter au minimum **8 caractères**, **une majuscule**, **une miniscule** et **un caractère spécial** ``,;:?./@#"'{}[]-_()$*%=+``
-- Contrôle et retour d'erreur si les champs ne sont pas valide
+`` http://localhost:8000/``
 
-### Connexion:
-L’utilisateur doit pouvoir se connecter avec:
-- email
-- mot de passe
 
-Une fois connecté, un **token** devra être généré pour le reste de l'utilisation de l'API
+### Vue app application (Token)
+C'est une application web créée rapidement avec VueJS. Cette application utilise les API déjà créées et gère l'authentification à l'aide d'un Token.
 
-## Pokémon:
-
-### Index / Show:
-- Route publique (sans les légendaires. Connexion obligatoire pour les afficher)
-- Pouvoir voir un Pokémon spécifique grâce à son **ID**
-- Renvoie la liste de Pokémon 50 par 50
-- Possibilité de changer de page et de changer le nombre de ligne affiché
-- Possibilité de filtrer / rechercher par
-  - Nom
-  - Type
-  - Génération
-  - Légendaire
-
-### Edit / Delete:
-- Route privée
-- Ne pas pouvoir éditer / supprimer un Pokémon Légendaire
-- Possibilité d'éditer
-    - Nom
-    - Type (changer parmis les types présents. Pas de possibilité d'en ajouter)
-    - Génération
-    - Légendaire
-
-## Nice to have :
-
-* Commande d’installation du projet
-* Interface
-
-## Bonus:
-
-* Test unitaire
-* Soyez créatif :)
+`` http://localhost:8000/app``
